@@ -1,0 +1,20 @@
+{
+  "name": "genkgo/api",
+  "description": "Genkgo API Connector",
+  "minimum-stability": "stable",
+  "license": "MIT License",
+  "authors": [
+    {
+      "name": "Frederik Bosch",
+      "email": "f.bosch@genkgo.nl"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "~6.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Genkgo\\Api\\": ["src"]
+    }
+  }
+}
