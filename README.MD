@@ -4,7 +4,7 @@ PHP package to connect to the Genkgo v1 API
 ## Usage
 
 Add genkgo/api to your dependencies and install them. You can have a look at [one of the
-examples](examples) or see the [docs](docs).
+examples](examples) or see the [docs](docs/index.md).
 
 ```php
 <?php
