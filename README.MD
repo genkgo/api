@@ -1,4 +1,4 @@
-PHP package to connect to the Genkgo v1 API
+PHP Genkgo v1 API Connector
 ============================================
 
 [![Build Status](https://travis-ci.org/genkgo/api.png?branch=master)](https://travis-ci.org/genkgo/api)
