@@ -1,6 +1,8 @@
 PHP package to connect to the Genkgo v1 API
 ============================================
 
+[![Build Status](https://travis-ci.org/genkgo/api.png?branch=master)](https://travis-ci.org/genkgo/api)
+
 ## Usage
 
 Add genkgo/api to your dependencies and install them. You can have a look at [one of the
