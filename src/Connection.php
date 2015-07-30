@@ -41,7 +41,7 @@ class Connection {
      * @param $part
      * @param $command
      * @param array $parameters
-     * @return mixed|string
+     * @return Response
      * @throws ResponseException
      */
     public function command ($part, $command, $parameters=array()) {
@@ -56,26 +56,25 @@ class Connection {
 
     /**
      * @param $data
-     * @return mixed|string
+     * @return Response
      * @throws ResponseException
      */
     protected function post ($data) {
         $client = $this->client;
-
         try {
             $response = $client->post($this->address, [
                 'form_params' => $data
             ]);
         } catch (ServerException $e) {
             $responseStatus = $e->getResponse()->getStatusCode();
-            $responseMsg = $e->getResponse()->getBody(true);
+            $responseMsg = $e->getResponse()->getBody();
 
             throw new ResponseException(
                 "Request failed with command {$data['command']}, status code {$responseStatus} and message {$responseMsg}"
             );
         }
 
-        $body = (string) $response->getBody(true);
+        $body = (string) $response->getBody();
 
         $contentType = $response->getHeader('content-type');
         if (count($contentType) === 0) {

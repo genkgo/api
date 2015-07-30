@@ -16,6 +16,10 @@ class Response {
     /**
      * @var string
      */
+    private $charset;
+    /**
+     * @var string
+     */
     private $body;
     /**
      *
@@ -29,19 +33,44 @@ class Response {
     /**
      * @param string $body
      * @param string $contentType
+     * @throws ResponseException
      */
     public function __construct($body, $contentType)
     {
         $this->body = $body;
-        $this->contentType = $contentType;
+        if (strpos($contentType, ';') === false) {
+            $this->contentType = $contentType;
+        } else {
+            list ($this->contentType, $charset) = array_map('trim', explode(';', $contentType));
+            if (strpos($charset, 'charset=') === false) {
+                throw new ResponseException('Wrong content type, malformed charset: ' . $charset);
+            }
+            list ($key, $this->charset) = array_map('trim', explode('=', $charset));
+        }
+    }
+
+    /**
+     * @return string
+     * @throws ResponseException
+     */
+    public function getBody()
+    {
+        switch ($this->contentType) {
+            case self::TYPE_TEXT:
+                return $this->body;
+            case self::TYPE_JSON:
+                return json_decode($this->body);
+            default:
+                throw new ResponseException("Unknown response type {$this->contentType}");
+        }
     }
 
     /**
      * @return string
      */
-    public function getBody()
+    public function getCharset()
     {
-        return $this->body;
+        return $this->charset;
     }
 
     /**
@@ -50,16 +79,7 @@ class Response {
      */
     public function getContentType()
     {
-        switch ($this->contentType) {
-            case self::TYPE_TEXT:
-                return new Response($this->body, $this->contentType);
-            case self::TYPE_JSON:
-                return new Response(json_decode($this->body), $this->contentType);
-            default:
-                throw new ResponseException(
-                    "Unknown response type"
-                );
-        }
+        return $this->contentType;
     }
 
 }
