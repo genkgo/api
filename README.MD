@@ -1,9 +1,10 @@
 PHP package to connect to the Genkgo v1 API
 ============================================
 
-## Using
+## Usage
 
-Add genkgo/api to your dependencies and install them.
+Add genkgo/api to your dependencies and install them. You can have a look at [one of the
+examples](https://github.com/genkgo/api-php/examples) or see the [docs](https://github.com/genkgo/api-docs).
 
 ```php
 <?php
@@ -22,5 +23,4 @@ $folder = $connection->command('organization', 'find', [
 
 ## Info
 
-* [https://github.com/genkgo/api-docs](https://github.com/genkgo/api-docs)
 * [https://www.genkgo.com/](https://www.genkgo.com/)
