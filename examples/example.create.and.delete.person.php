@@ -9,13 +9,13 @@ $connection = new Connection(new Client(), $config['url'], $config['token']);
 
 $folder = $connection->command('organization', 'find', [
     'name' => 'Aanmeldingen'
-]);
+])->getBody();
 
 $newEntry = $connection->command('organization', 'create', [
     'id' => $folder->id,
     'name' => 'Weergave Naam',
     'objectclass' => 'associationMember'
-]);
+])->getBody();
 
 $result = $connection->command('organization', 'modify', [
     'id' => $newEntry->id,
