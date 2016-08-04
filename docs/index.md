@@ -8,7 +8,7 @@ The Genkgo API works as follows
 3. Include the Genkgo PHP API source in your project; or write your own adapter.
 4. Send your command
 
-Endpoit address:
+Endpoint address:
 - Default endpoint: https://your-install.genkgoweb.com/admin/api/
 - Or if you have a registered  domain with us: https://your-domain/admin/api/
 	
