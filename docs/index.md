@@ -7,6 +7,9 @@ The Genkgo API works as follows
 2. Grant rights to connect to the API and execute your operations
 3. Include the Genkgo PHP API source in your project; or write your own adapter.
 4. Send your command
+
+Default API address: https://your-install.genkgoweb.com/admin/api/
+Or if you have a registered  domain with us: https://your-domain/admin/api/
 	
 Application Parts that have an API available:
 
