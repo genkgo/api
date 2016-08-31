@@ -118,8 +118,8 @@ Get information from an entry
 
 Parameters:
 
-- id => the id of the element to add to the group
-- tab => the name of the tab to get information from
+- id => the id of the entry
+- tab => (optional, defaults to the main tab of the objectclass) the name of the tab to get information from
 
 Returns:
 
