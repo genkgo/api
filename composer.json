@@ -2,7 +2,7 @@
   "name": "genkgo/api",
   "description": "Genkgo API Connector",
   "minimum-stability": "stable",
-  "license": "MIT License",
+  "license": "MIT",
   "authors": [
     {
       "name": "Frederik Bosch",
