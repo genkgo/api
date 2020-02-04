@@ -16,6 +16,3 @@ Application Parts that have an API available:
 
 0. Main
 1. [Organization](organization.md)
-2. [Website](site.md)
-3. Communication
-4. Financial
