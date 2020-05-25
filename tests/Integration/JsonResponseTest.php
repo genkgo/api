@@ -5,13 +5,14 @@ use Genkgo\Api\Connection;
 use Genkgo\Api\Response;
 use GuzzleHttp\Client;
 use Psr\Http\Message\MessageInterface;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class JsonResponseTest extends \PHPUnit_Framework_TestCase {
+class JsonResponseTest extends TestCase {
 
     public function testJson () {
         $httpRequest = $this->getMockBuilder(Client::class)->setMethods(['post'])->getMock();
-        $httpResponse = $this->getMock(MessageInterface::class);
+        $httpResponse = $this->getMockBuilder(MessageInterface::class)->getMock();
 
         $httpRequest
             ->expects($this->once())
@@ -48,7 +49,7 @@ class JsonResponseTest extends \PHPUnit_Framework_TestCase {
 
     public function testJsonWithCharset () {
         $httpRequest = $this->getMockBuilder(Client::class)->setMethods(['post'])->getMock();
-        $httpResponse = $this->getMock(MessageInterface::class);
+        $httpResponse = $this->getMockBuilder(MessageInterface::class)->getMock();
 
         $httpRequest
             ->expects($this->once())

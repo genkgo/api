@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <phpunit bootstrap="bootstrap.php">
     <testsuites>
-        <testsuite>
-            <directory>./Unit</directory>
+        <testsuite name="api test">
             <directory>./Integration</directory>
         </testsuite>
     </testsuites>
