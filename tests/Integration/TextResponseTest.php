@@ -5,13 +5,13 @@ use Genkgo\Api\Connection;
 use Genkgo\Api\Response;
 use GuzzleHttp\Client;
 use Psr\Http\Message\MessageInterface;
-use stdClass;
+use PHPUnit\Framework\TestCase;
 
-class TextResponseTest extends \PHPUnit_Framework_TestCase {
+class TextResponseTest extends TestCase {
 
     public function testText () {
         $httpRequest = $this->getMockBuilder(Client::class)->setMethods(['post'])->getMock();
-        $httpResponse = $this->getMock(MessageInterface::class);
+        $httpResponse = $this->getMockBuilder(MessageInterface::class)->getMock();
 
         $httpRequest
             ->expects($this->once())
