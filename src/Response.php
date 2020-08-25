@@ -1,30 +1,31 @@
 <?php
+
 namespace Genkgo\Api;
 
 use Genkgo\Api\Exception\ResponseException;
 
-/**
- * Class Response
- * @package Genkgo\Api
- */
-class Response {
-
+class Response
+{
     /**
      * @var string
      */
     private $contentType;
+
     /**
      * @var string
      */
     private $charset;
+
     /**
      * @var string
      */
     private $body;
+
     /**
      *
      */
     const TYPE_TEXT = 'text/txt';
+
     /**
      *
      */

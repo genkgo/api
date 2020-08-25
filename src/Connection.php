@@ -1,16 +1,13 @@
 <?php
+
 namespace Genkgo\Api;
 
 use Genkgo\Api\Exception\ResponseException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 
-/**
- * Class Connection
- * @package Genkgo\Api
- */
-class Connection {
-
+class Connection
+{
     /**
      * @var
      */
@@ -31,7 +28,8 @@ class Connection {
      * @param $address
      * @param $token
      */
-    public function __construct (Client $client, $address, $token) {
+    public function __construct(Client $client, $address, $token)
+    {
         $this->client = $client;
         $this->address = $address;
         $this->token = $token;
@@ -44,11 +42,12 @@ class Connection {
      * @return Response
      * @throws ResponseException
      */
-    public function command ($part, $command, $parameters=array()) {
+    public function command($part, $command, $parameters = array())
+    {
         $data = array(
-            'part'	=> (string) $part,
-            'command'	=> (string) $command,
-            'token'	=> (string) $this->token
+            'part' => (string)$part,
+            'command' => (string)$command,
+            'token' => (string)$this->token
         );
         $data = array_merge($data, $parameters);
         return $this->post($data);
@@ -59,7 +58,8 @@ class Connection {
      * @return Response
      * @throws ResponseException
      */
-    protected function post ($data) {
+    protected function post($data)
+    {
         $client = $this->client;
         try {
             $response = $client->post($this->address, [
@@ -74,7 +74,7 @@ class Connection {
             );
         }
 
-        $body = (string) $response->getBody();
+        $body = (string)$response->getBody();
 
         $contentType = $response->getHeader('content-type');
         if (count($contentType) === 0) {

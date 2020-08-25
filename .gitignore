@@ -2,4 +2,5 @@
 /vendor/
 /.settings/
 /composer.lock
+/coverage.clover
 tests/.phpunit.result.cache

@@ -1,18 +1,21 @@
 <?php
+
 namespace Genkgo\Api\Integration;
 
 use Genkgo\Api\Connection;
 use Genkgo\Api\Response;
 use GuzzleHttp\Client;
-use Psr\Http\Message\MessageInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 use stdClass;
 
-class JsonResponseTest extends TestCase {
+class JsonResponseTest extends TestCase
+{
 
-    public function testJson () {
+    public function testJson()
+    {
         $httpRequest = $this->getMockBuilder(Client::class)->setMethods(['post'])->getMock();
-        $httpResponse = $this->getMockBuilder(MessageInterface::class)->getMock();
+        $httpResponse = $this->getMockBuilder(ResponseInterface::class)->getMock();
 
         $httpRequest
             ->expects($this->once())
@@ -23,21 +26,18 @@ class JsonResponseTest extends TestCase {
                     'part' => 'organization',
                     'command' => 'tree'
                 ]])
-            ->willReturn($httpResponse)
-        ;
+            ->willReturn($httpResponse);
 
         $httpResponse
             ->expects($this->once())
             ->method('getBody')
-            ->willReturn(json_encode([['id' => 1, 'name'=> 'Top Element']]))
-        ;
+            ->willReturn(json_encode([['id' => 1, 'name' => 'Top Element']]));
 
         $httpResponse
             ->expects($this->once())
             ->method('getHeader')
             ->with('content-type')
-            ->willReturn(['application/json'])
-        ;
+            ->willReturn(['application/json']);
 
         $connection = new Connection($httpRequest, 'https://www.url.com/', 'token');
         $response = $connection->command('organization', 'tree');
@@ -47,28 +47,26 @@ class JsonResponseTest extends TestCase {
         $this->assertEquals('Top Element', $response->getBody()[0]->name);
     }
 
-    public function testJsonWithCharset () {
+    public function testJsonWithCharset()
+    {
         $httpRequest = $this->getMockBuilder(Client::class)->setMethods(['post'])->getMock();
-        $httpResponse = $this->getMockBuilder(MessageInterface::class)->getMock();
+        $httpResponse = $this->getMockBuilder(ResponseInterface::class)->getMock();
 
         $httpRequest
             ->expects($this->once())
             ->method('post')
-            ->willReturn($httpResponse)
-        ;
+            ->willReturn($httpResponse);
 
         $httpResponse
             ->expects($this->once())
             ->method('getBody')
-            ->willReturn(json_encode([['id' => 1, 'name'=> 'Top Element']]))
-        ;
+            ->willReturn(json_encode([['id' => 1, 'name' => 'Top Element']]));
 
         $httpResponse
             ->expects($this->once())
             ->method('getHeader')
             ->with('content-type')
-            ->willReturn(['application/json; charset=UTF-8'])
-        ;
+            ->willReturn(['application/json; charset=UTF-8']);
 
         $connection = new Connection($httpRequest, 'https://www.url.com/', 'token');
         $response = $connection->command('organization', 'tree');
