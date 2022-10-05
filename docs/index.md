@@ -9,7 +9,7 @@ The Genkgo API works as follows
 4. Send your command
 
 Endpoint address:
-- Default endpoint: https://your-install.genkgoweb.com/admin/api/
+- Default endpoint: https://your-install.genkgo.app/admin/api/
 - Or if you have a registered  domain with us: https://your-domain/admin/api/
 	
 Application Parts that have an API available:
