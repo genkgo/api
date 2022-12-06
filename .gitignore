@@ -3,4 +3,5 @@
 /.settings/
 /composer.lock
 /coverage.clover
-tests/.phpunit.result.cache
+/.phpunit.result.cache
+/.php-cs-fixer.cache

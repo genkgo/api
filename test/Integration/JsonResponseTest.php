@@ -1,37 +1,42 @@
 <?php
 
-namespace Genkgo\Api\Integration;
+declare(strict_types=1);
+
+namespace Genkgo\TestApi\Integration;
 
 use Genkgo\Api\Connection;
 use Genkgo\Api\Response;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use stdClass;
 
-class JsonResponseTest extends TestCase
+final class JsonResponseTest extends TestCase
 {
-
-    public function testJson()
+    public function testJson(): void
     {
-        $httpRequest = $this->getMockBuilder(Client::class)->setMethods(['post'])->getMock();
-        $httpResponse = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        $client = $this->createMock(Client::class);
+        $httpResponse = $this->createMock(ResponseInterface::class);
 
-        $httpRequest
+        $client
             ->expects($this->once())
-            ->method('post')
-            ->with('https://www.url.com/', [
-                'form_params' => [
-                    'token' => 'token',
-                    'part' => 'organization',
-                    'command' => 'tree'
-                ]])
+            ->method('sendRequest')
+            ->with(
+                $this->callback(
+                    function (RequestInterface $request) {
+                        $this->assertEquals('part=organization&command=tree&token=token', (string)$request->getBody());
+                        return true;
+                    }
+                )
+            )
             ->willReturn($httpResponse);
 
         $httpResponse
             ->expects($this->once())
             ->method('getBody')
-            ->willReturn(json_encode([['id' => 1, 'name' => 'Top Element']]));
+            ->willReturn(\json_encode([['id' => 1, 'name' => 'Top Element']]));
 
         $httpResponse
             ->expects($this->once())
@@ -39,7 +44,7 @@ class JsonResponseTest extends TestCase
             ->with('content-type')
             ->willReturn(['application/json']);
 
-        $connection = new Connection($httpRequest, 'https://www.url.com/', 'token');
+        $connection = new Connection($client, new HttpFactory(), 'https://www.url.com/', 'token');
         $response = $connection->command('organization', 'tree');
 
         $this->assertInstanceOf(Response::class, $response);
@@ -47,20 +52,21 @@ class JsonResponseTest extends TestCase
         $this->assertEquals('Top Element', $response->getBody()[0]->name);
     }
 
-    public function testJsonWithCharset()
+    public function testJsonWithCharset(): void
     {
-        $httpRequest = $this->getMockBuilder(Client::class)->setMethods(['post'])->getMock();
-        $httpResponse = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        $client = $this->createMock(Client::class);
+        $httpResponse = $this->createMock(ResponseInterface::class);
 
-        $httpRequest
+        $client
             ->expects($this->once())
-            ->method('post')
+            ->method('sendRequest')
+            ->with($this->isInstanceOf(RequestInterface::class))
             ->willReturn($httpResponse);
 
         $httpResponse
             ->expects($this->once())
             ->method('getBody')
-            ->willReturn(json_encode([['id' => 1, 'name' => 'Top Element']]));
+            ->willReturn(\json_encode([['id' => 1, 'name' => 'Top Element']]));
 
         $httpResponse
             ->expects($this->once())
@@ -68,7 +74,7 @@ class JsonResponseTest extends TestCase
             ->with('content-type')
             ->willReturn(['application/json; charset=UTF-8']);
 
-        $connection = new Connection($httpRequest, 'https://www.url.com/', 'token');
+        $connection = new Connection($client, new HttpFactory(), 'https://www.url.com/', 'token');
         $response = $connection->command('organization', 'tree');
 
         $this->assertEquals('application/json', $response->getContentType());
@@ -76,5 +82,4 @@ class JsonResponseTest extends TestCase
         $this->assertContainsOnlyInstancesOf(StdClass::class, $response->getBody());
         $this->assertEquals('Top Element', $response->getBody()[0]->name);
     }
-
 }

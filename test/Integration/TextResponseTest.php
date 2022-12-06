@@ -1,32 +1,28 @@
 <?php
 
-namespace Genkgo\Api\Integration;
+declare(strict_types=1);
+
+namespace Genkgo\TestApi\Integration;
 
 use Genkgo\Api\Connection;
 use Genkgo\Api\Response;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class TextResponseTest extends TestCase
+final class TextResponseTest extends TestCase
 {
-
-    public function testText()
+    public function testText(): void
     {
-        $httpRequest = $this->getMockBuilder(Client::class)->setMethods(['post'])->getMock();
-        $httpResponse = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        $client = $this->createMock(Client::class);
+        $httpResponse = $this->createMock(ResponseInterface::class);
 
-        $httpRequest
+        $client
             ->expects($this->once())
-            ->method('post')
-            ->with('https://www.url.com/', [
-                'form_params' => [
-                    'token' => 'token',
-                    'part' => 'organization',
-                    'command' => 'login',
-                    'uid' => 'username',
-                    'password' => 'password'
-                ]])
+            ->method('sendRequest')
+            ->with($this->isInstanceOf(RequestInterface::class))
             ->willReturn($httpResponse);
 
         $httpResponse
@@ -40,7 +36,7 @@ class TextResponseTest extends TestCase
             ->with('content-type')
             ->willReturn(['text/txt']);
 
-        $connection = new Connection($httpRequest, 'https://www.url.com/', 'token');
+        $connection = new Connection($client, new HttpFactory(), 'https://www.url.com/', 'token');
         $response = $connection->command('organization', 'login', [
             'uid' => 'username',
             'password' => 'password'
@@ -49,5 +45,4 @@ class TextResponseTest extends TestCase
         $this->assertInstanceOf(Response::class, $response);
         $this->assertEquals('true', $response->getBody());
     }
-
 }

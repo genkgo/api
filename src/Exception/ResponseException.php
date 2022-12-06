@@ -1,8 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Genkgo\Api\Exception;
 
 use Exception;
 
-class ResponseException extends Exception {
-
+final class ResponseException extends Exception
+{
 }

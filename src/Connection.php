@@ -1,83 +1,71 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Genkgo\Api;
 
 use Genkgo\Api\Exception\ResponseException;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ServerException;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
-class Connection
+final class Connection
 {
-    /**
-     * @var
-     */
-    private $address;
-
-    /**
-     * @var
-     */
-    private $token;
-
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @param Client $client
-     * @param $address
-     * @param $token
-     */
-    public function __construct(Client $client, $address, $token)
-    {
-        $this->client = $client;
-        $this->address = $address;
-        $this->token = $token;
+    public function __construct(
+        private ClientInterface $client,
+        private RequestFactoryInterface $requestFactory,
+        private string $address,
+        private string $token
+    ) {
     }
 
     /**
-     * @param $part
-     * @param $command
-     * @param array $parameters
-     * @return Response
      * @throws ResponseException
      */
-    public function command($part, $command, $parameters = array())
+    public function command(string $part, string $command, array $parameters = []): Response
     {
-        $data = array(
-            'part' => (string)$part,
-            'command' => (string)$command,
-            'token' => (string)$this->token
-        );
-        $data = array_merge($data, $parameters);
+        $data = [
+            'part' => $part,
+            'command' => $command,
+            'token' => $this->token
+        ];
+
+        $data = \array_merge($data, $parameters);
         return $this->post($data);
     }
 
     /**
-     * @param $data
-     * @return Response
      * @throws ResponseException
      */
-    protected function post($data)
+    private function post(array $data): Response
     {
-        $client = $this->client;
         try {
-            $response = $client->post($this->address, [
-                'form_params' => $data
-            ]);
-        } catch (ServerException $e) {
-            $responseStatus = $e->getResponse()->getStatusCode();
-            $responseMsg = $e->getResponse()->getBody();
+            $response = $this->client->sendRequest(
+                $this->requestFactory->createRequest('POST', $this->address)
+                    ->withBody(new StringStream(\http_build_query($data, '', '&')))
+            );
 
+            $responseStatus = $response->getStatusCode();
+            if ($responseStatus >= 400) {
+                $responseMsg = $response->getBody();
+
+                throw new ResponseException(
+                    "Request failed with command {$data['command']}, status code {$responseStatus} and message {$responseMsg}"
+                );
+            }
+        } catch (ClientExceptionInterface $e) {
+            \var_dump($e);
             throw new ResponseException(
-                "Request failed with command {$data['command']}, status code {$responseStatus} and message {$responseMsg}"
+                "Request failed with command {$data['command']}, {$e->getMessage()}",
+                $e->getCode(),
+                $e
             );
         }
 
         $body = (string)$response->getBody();
 
         $contentType = $response->getHeader('content-type');
-        if (count($contentType) === 0) {
+        if (\count($contentType) === 0) {
             throw new ResponseException(
                 "Response did not contains a Content-Type header"
             );

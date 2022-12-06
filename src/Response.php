@@ -1,86 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Genkgo\Api;
 
 use Genkgo\Api\Exception\ResponseException;
 
-class Response
+final class Response
 {
-    /**
-     * @var string
-     */
-    private $contentType;
+    public const TYPE_TEXT = 'text/txt';
+    public const TYPE_JSON = 'application/json';
+    private string $contentType;
+    private string $charset;
 
     /**
-     * @var string
-     */
-    private $charset;
-
-    /**
-     * @var string
-     */
-    private $body;
-
-    /**
-     *
-     */
-    const TYPE_TEXT = 'text/txt';
-
-    /**
-     *
-     */
-    const TYPE_JSON = 'application/json';
-
-    /**
-     * @param string $body
-     * @param string $contentType
      * @throws ResponseException
      */
-    public function __construct($body, $contentType)
+    public function __construct(private string $body, string $contentType)
     {
         $this->body = $body;
-        if (strpos($contentType, ';') === false) {
+        if (!\str_contains($contentType, ';')) {
             $this->contentType = $contentType;
         } else {
-            list ($this->contentType, $charset) = array_map('trim', explode(';', $contentType));
-            if (strpos($charset, 'charset=') === false) {
+            [$this->contentType, $charset] = \array_map('trim', \explode(';', $contentType));
+            if (!\str_contains($charset, 'charset=')) {
                 throw new ResponseException('Wrong content type, malformed charset: ' . $charset);
             }
-            list ($key, $this->charset) = array_map('trim', explode('=', $charset));
+
+            [, $this->charset] = \array_map(fn (string $part) => \trim($part), \explode('=', $charset));
         }
     }
 
     /**
-     * @return string
      * @throws ResponseException
      */
-    public function getBody()
+    public function getBody(): mixed
     {
-        switch ($this->contentType) {
-            case self::TYPE_TEXT:
-                return $this->body;
-            case self::TYPE_JSON:
-                return json_decode($this->body);
-            default:
-                throw new ResponseException("Unknown response type {$this->contentType}");
-        }
+        return match ($this->contentType) {
+            self::TYPE_TEXT => $this->body,
+            self::TYPE_JSON => \json_decode($this->body),
+            default => throw new ResponseException("Unknown response type {$this->contentType}"),
+        };
     }
 
-    /**
-     * @return string
-     */
-    public function getCharset()
+    public function getCharset(): string
     {
         return $this->charset;
     }
 
-    /**
-     * @return mixed
-     * @throws ResponseException
-     */
-    public function getContentType()
+    public function getContentType(): string
     {
         return $this->contentType;
     }
-
 }

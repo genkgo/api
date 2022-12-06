@@ -10,11 +10,15 @@
     }
   ],
   "require": {
-    "php": "^7.4 || ^8.0",
-    "guzzlehttp/guzzle": "^7.0"
+    "php": "~8.0.0 || ~8.1.0",
+    "psr/http-client": "^1.0",
+    "psr/http-factory": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^9.5",
+    "guzzlehttp/guzzle": "^7.5",
+    "guzzlehttp/psr7": "^2.4.3",
+    "friendsofphp/php-cs-fixer": "^3.0"
   },
   "autoload": {
     "psr-4": {
@@ -23,7 +27,16 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Genkgo\\Api\\Integration\\": "tests/Integration"
+      "Genkgo\\TestApi\\": "test"
     }
+  },
+  "scripts": {
+    "test": [
+      "./vendor/bin/phpunit -c phpunit.xml",
+      "./vendor/bin/php-cs-fixer fix --dry-run --verbose --config .php-cs-fixer.dist.php ./src ./test"
+    ],
+    "lint": [
+      "./vendor/bin/php-cs-fixer fix --verbose --config .php-cs-fixer.dist.php ./src ./test"
+    ]
   }
 }
