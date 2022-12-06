@@ -40,9 +40,12 @@ final class Connection
     private function post(array $data): Response
     {
         try {
+            $body = new StringStream(\http_build_query($data, '', '&'));
             $response = $this->client->sendRequest(
                 $this->requestFactory->createRequest('POST', $this->address)
-                    ->withBody(new StringStream(\http_build_query($data, '', '&')))
+                    ->withHeader('Content-Length', $body->getSize())
+                    ->withHeader('Content-Type', 'application/x-www-form-urlencoded')
+                    ->withBody($body)
             );
 
             $responseStatus = $response->getStatusCode();
@@ -54,7 +57,6 @@ final class Connection
                 );
             }
         } catch (ClientExceptionInterface $e) {
-            \var_dump($e);
             throw new ResponseException(
                 "Request failed with command {$data['command']}, {$e->getMessage()}",
                 $e->getCode(),
