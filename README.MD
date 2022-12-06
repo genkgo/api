@@ -1,12 +1,13 @@
-PHP Genkgo v1 API Connector
+PHP Genkgo v2 API Connector
 ============================================
 
 [![Build Status](https://travis-ci.org/genkgo/api.png?branch=master)](https://travis-ci.org/genkgo/api)
 
 ## Usage
 
-Add genkgo/api to your dependencies and install them. You can have a look at [one of the
-examples](examples) or see the [docs](docs/index.md).
+Add `genkgo/api` and implementation of `psr/http-client` and `psr/http-factory` to your dependencies and install them. 
+You can have a look at [one of the examples](examples) or see the [docs](docs/index.md). The examples rely on 
+[Guzzle](https://github.com/guzzle/guzzle) and [Guzzle PSR-7](https://github.com/guzzle/psr7) for the http implementations.
 
 ```php
 <?php

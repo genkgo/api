@@ -3,9 +3,10 @@ require_once '../vendor/autoload.php';
 
 use Genkgo\Api\Connection;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\HttpFactory;
 
 $config = require_once 'config.php';
-$connection = new Connection(new Client(), $config['url'], $config['token']);
+$connection = new Connection(new Client(), new HttpFactory(), $config['url'], $config['token']);
 
 $folder = $connection->command('organization', 'find', [
     'name' => 'Aanmeldingen'
