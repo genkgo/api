@@ -6,6 +6,7 @@ namespace Genkgo\TestApi\Integration;
 
 use Genkgo\Api\Connection;
 use Genkgo\Api\Exception\ResponseException;
+use Genkgo\Api\StringStream;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\HttpFactory;
@@ -28,7 +29,7 @@ final class ErrorResponseTest extends TestCase
         $httpResponse
             ->expects($this->any())
             ->method('getBody')
-            ->willReturn('error message');
+            ->willReturn(new StringStream('error message'));
 
         $client
             ->expects($this->once())

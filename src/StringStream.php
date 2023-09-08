@@ -14,12 +14,12 @@ final class StringStream implements StreamInterface
     {
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->content;
     }
 
-    public function close()
+    public function close(): void
     {
     }
 
@@ -34,27 +34,27 @@ final class StringStream implements StreamInterface
         return $handle;
     }
 
-    public function getSize()
+    public function getSize(): int
     {
         return \strlen($this->content);
     }
 
-    public function tell()
+    public function tell(): int
     {
         return $this->position;
     }
 
-    public function eof()
+    public function eof(): bool
     {
         return $this->position >= \strlen($this->content);
     }
 
-    public function isSeekable()
+    public function isSeekable(): bool
     {
         return true;
     }
 
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek(int $offset, int $whence = SEEK_SET): void
     {
         $length = \strlen($this->content);
         if ($length < $offset) {
@@ -62,21 +62,19 @@ final class StringStream implements StreamInterface
         }
 
         $this->position = $offset;
-        return 0;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
-        return true;
     }
 
-    public function isWritable()
+    public function isWritable(): bool
     {
         return true;
     }
 
-    public function write($string)
+    public function write(string $string): int
     {
         $this->content = \substr_replace($this->content, $string, $this->position, \strlen($string));
         $bytesWritten = \strlen($string);
@@ -84,24 +82,24 @@ final class StringStream implements StreamInterface
         return $bytesWritten;
     }
 
-    public function isReadable()
+    public function isReadable(): bool
     {
         return true;
     }
 
-    public function read($length)
+    public function read(int $length): string
     {
         $result = \substr($this->content, $this->position, $length);
         $this->position += \strlen($result);
         return $result;
     }
 
-    public function getContents()
+    public function getContents(): string
     {
         return \substr($this->content, $this->position);
     }
 
-    public function getMetadata($key = null)
+    public function getMetadata(?string $key = null)
     {
         return [];
     }

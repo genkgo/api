@@ -6,6 +6,7 @@ namespace Genkgo\TestApi\Integration;
 
 use Genkgo\Api\Connection;
 use Genkgo\Api\Response;
+use Genkgo\Api\StringStream;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
@@ -36,7 +37,7 @@ final class JsonResponseTest extends TestCase
         $httpResponse
             ->expects($this->once())
             ->method('getBody')
-            ->willReturn(\json_encode([['id' => 1, 'name' => 'Top Element']]));
+            ->willReturn(new StringStream(\json_encode([['id' => 1, 'name' => 'Top Element']])));
 
         $httpResponse
             ->expects($this->once())
@@ -66,7 +67,7 @@ final class JsonResponseTest extends TestCase
         $httpResponse
             ->expects($this->once())
             ->method('getBody')
-            ->willReturn(\json_encode([['id' => 1, 'name' => 'Top Element']]));
+            ->willReturn(new StringStream(\json_encode([['id' => 1, 'name' => 'Top Element']])));
 
         $httpResponse
             ->expects($this->once())

@@ -6,6 +6,7 @@ namespace Genkgo\TestApi\Integration;
 
 use Genkgo\Api\Connection;
 use Genkgo\Api\Response;
+use Genkgo\Api\StringStream;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +29,7 @@ final class TextResponseTest extends TestCase
         $httpResponse
             ->expects($this->once())
             ->method('getBody')
-            ->willReturn('true');
+            ->willReturn(new StringStream('true'));
 
         $httpResponse
             ->expects($this->once())
